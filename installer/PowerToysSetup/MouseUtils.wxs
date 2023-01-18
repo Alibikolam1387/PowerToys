@@ -5,7 +5,6 @@
   <?include $(sys.CURRENTDIR)\Common.wxi?>
 
   <Fragment>
-    <!-- MouseUtils -->
     <DirectoryRef Id="MouseUtilsInstallFolder" FileSource="$(var.BinDir)modules\$(var.MouseUtilsProjectName)">
       <Component Id="Module_FindMyMouse" Win64="yes">
         <File Source="$(var.BinDir)modules\$(var.MouseUtilsProjectName)\PowerToys.FindMyMouse.dll" KeyPath="yes" />

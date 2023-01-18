@@ -11,7 +11,6 @@
   <?define SettingsV2MicrosoftUIXamlAssetsInstallFiles=NoiseAsset_256x256_PNG.png?>
 
   <Fragment>
-    <!-- SettingsV2 components -->
     <DirectoryRef Id="SettingsV2InstallFolder" FileSource="$(var.BinDir)Settings\">
       <?foreach File in $(var.SettingsV2Files)?>
         <Component Id="SV2C_$(var.File)" Win64="yes">

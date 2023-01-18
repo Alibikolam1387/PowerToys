@@ -6,16 +6,49 @@
 
   <?define ShortcutGuideExecutable=$(var.BinDir)\modules\ShortcutGuide\ShortcutGuide?>
   <?define ShortcutGuideModuleInterface=$(var.BinDir)\modules\ShortcutGuide\ShortcutGuideModuleInterface?>
-  <?define ShortcutGuideSvgsFiles=0.svg;1.svg;2.svg;3.svg;4.svg;5.svg;6.svg;7.svg;8.svg;9.svg;no_active_window.svg;overlay.svg;overlay_portrait.svg?>
 
   <Fragment>
-      <!-- Shortcut guide files -->
+    <!-- Shortcut guide files -->
     <DirectoryRef Id="ShortcutGuideSvgsInstallFolder" FileSource="$(var.ShortcutGuideExecutable)\svgs\">
-      <?foreach File in $(var.ShortcutGuideSvgsFiles)?>
-        <Component Id="ShortcutGuideSvgs_$(var.File)" Win64="yes">
-          <File Source="$(var.ShortcutGuideExecutable)\svgs\$(var.File)" />
-        </Component>
-      <?endforeach?>
+      <Component Id="ShortcutGuideSvgs_0" Win64="yes">
+        <File Source="$(var.ShortcutGuideExecutable)\svgs\0.svg" />
+      </Component>
+      <Component Id="ShortcutGuideSvgs_1" Win64="yes">
+        <File Source="$(var.ShortcutGuideExecutable)\svgs\1.svg" />
+      </Component>
+      <Component Id="ShortcutGuideSvgs_2" Win64="yes">
+        <File Source="$(var.ShortcutGuideExecutable)\svgs\2.svg" />
+      </Component>
+      <Component Id="ShortcutGuideSvgs_3" Win64="yes">
+        <File Source="$(var.ShortcutGuideExecutable)\svgs\3.svg" />
+      </Component>
+      <Component Id="ShortcutGuideSvgs_4" Win64="yes">
+        <File Source="$(var.ShortcutGuideExecutable)\svgs\4.svg" />
+      </Component>
+      <Component Id="ShortcutGuideSvgs_5" Win64="yes">
+        <File Source="$(var.ShortcutGuideExecutable)\svgs\5.svg" />
+      </Component>
+      <Component Id="ShortcutGuideSvgs_6" Win64="yes">
+        <File Source="$(var.ShortcutGuideExecutable)\svgs\6.svg" />
+      </Component>
+      <Component Id="ShortcutGuideSvgs_7" Win64="yes">
+        <File Source="$(var.ShortcutGuideExecutable)\svgs\7.svg" />
+      </Component>
+      <Component Id="ShortcutGuideSvgs_8" Win64="yes">
+        <File Source="$(var.ShortcutGuideExecutable)\svgs\8.svg" />
+      </Component>
+      <Component Id="ShortcutGuideSvgs_9" Win64="yes">
+        <File Source="$(var.ShortcutGuideExecutable)\svgs\9.svg" />
+      </Component>
+      <Component Id="ShortcutGuideSvgs_no_active_window" Win64="yes">
+        <File Source="$(var.ShortcutGuideExecutable)\svgs\no_active_window.svg" />
+      </Component>
+      <Component Id="ShortcutGuideSvgs_overlay" Win64="yes">
+        <File Source="$(var.ShortcutGuideExecutable)\svgs\overlay.svg" />
+      </Component>
+      <Component Id="ShortcutGuideSvgs_overlay_portrait" Win64="yes">
+        <File Source="$(var.ShortcutGuideExecutable)\svgs\overlay_portrait.svg" />
+      </Component>
     </DirectoryRef>
 
     <!-- Shortcut guide -->
@@ -32,9 +65,19 @@
     </DirectoryRef>
 
     <ComponentGroup Id="ShortcutGuideComponentGroup" Directory="INSTALLFOLDER">
-      <?foreach File in $(var.ShortcutGuideSvgsFiles)?>
-        <ComponentRef Id="ShortcutGuideSvgs_$(var.File)" />
-      <?endforeach?>
+      <ComponentRef Id="ShortcutGuideSvgs_0" />
+      <ComponentRef Id="ShortcutGuideSvgs_1" />
+      <ComponentRef Id="ShortcutGuideSvgs_2" />
+      <ComponentRef Id="ShortcutGuideSvgs_3" />
+      <ComponentRef Id="ShortcutGuideSvgs_4" />
+      <ComponentRef Id="ShortcutGuideSvgs_5" />
+      <ComponentRef Id="ShortcutGuideSvgs_6" />
+      <ComponentRef Id="ShortcutGuideSvgs_7" />
+      <ComponentRef Id="ShortcutGuideSvgs_8" />
+      <ComponentRef Id="ShortcutGuideSvgs_9" />
+      <ComponentRef Id="ShortcutGuideSvgs_no_active_window" />
+      <ComponentRef Id="ShortcutGuideSvgs_overlay" />
+      <ComponentRef Id="ShortcutGuideSvgs_overlay_portrait" />
       <ComponentRef Id="Module_ShortcutGuideModuleInterface" />
       <ComponentRef Id="Module_ShortcutGuideExecutable" />
     </ComponentGroup>

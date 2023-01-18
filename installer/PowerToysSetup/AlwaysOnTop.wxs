@@ -5,7 +5,6 @@
   <?include $(sys.CURRENTDIR)\Common.wxi?>
 
   <Fragment>
-    <!-- AlwaysOnTop -->
     <DirectoryRef Id="AlwaysOnTopInstallFolder" FileSource="$(var.BinDir)modules\$(var.AlwaysOnTopProjectName)">
       <Component Id="Module_AlwaysOnTopInterface" Win64="yes">
         <File Source="$(var.BinDir)modules\$(var.AlwaysOnTopProjectName)\PowerToys.AlwaysOnTopModuleInterface.dll" />

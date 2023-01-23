@@ -33,20 +33,35 @@
           </RegistryKey>
         </RegistryKey>
       </Component>
-      <Component Id="BackgroundActivator_dll" Win64="yes">
-        <File Id="PowerToys.BackgroundActivatorDLL.dll" KeyPath="yes" Checksum="yes" />
+      <Component Id="BackgroundActivator_dll" Win64="yes" Guid="A75E2882-7A8D-4332-89DD-831FFD6E0DD7">
+        <RegistryKey Root="HKCU" Key="Software\Classes\powertoys\components">
+          <RegistryValue Type="string" Name="BackgroundActivator_dll" Value="" KeyPath="yes"/>
+        </RegistryKey>
+        <File Id="PowerToys.BackgroundActivatorDLL.dll" Checksum="yes" />
       </Component>
-      <Component Id="PowerToys_ActionRunner_exe" Win64="yes">
-        <File Id="PowerToys.ActionRunner.exe" KeyPath="yes" Checksum="yes" />
+      <Component Id="PowerToys_ActionRunner_exe" Win64="yes" Guid="4AD4C092-1CE0-45F1-8A01-4D1C76A5D69E">
+        <RegistryKey Root="HKCU" Key="Software\Classes\powertoys\components">
+          <RegistryValue Type="string" Name="PowerToys_ActionRunner_exe" Value="" KeyPath="yes"/>
+        </RegistryKey>
+        <File Id="PowerToys.ActionRunner.exe" Checksum="yes" />
       </Component>
-      <Component Id="PowerToys_Update_exe" Win64="yes">
-        <File Id="PowerToys.Update.exe" KeyPath="yes" Checksum="yes" />
+      <Component Id="PowerToys_Update_exe" Win64="yes" Guid="A0BEAE0A-577A-40AC-8005-93BFF2ECE66C">
+        <RegistryKey Root="HKCU" Key="Software\Classes\powertoys\components">
+          <RegistryValue Type="string" Name="PowerToys_Update_exe" Value="" KeyPath="yes"/>
+        </RegistryKey>
+        <File Id="PowerToys.Update.exe" Checksum="yes" />
       </Component>
-      <Component Id="License_rtf" Win64="yes">
-        <File Source="$(var.RepoDir)\installer\License.rtf" Id="License.rtf" KeyPath="yes" />
+      <Component Id="License_rtf" Win64="yes" Guid="632C60DF-0DDC-4F14-8F2B-A28136CD9E63">
+        <RegistryKey Root="HKCU" Key="Software\Classes\powertoys\components">
+          <RegistryValue Type="string" Name="License_rtf" Value="" KeyPath="yes"/>
+        </RegistryKey>
+        <File Source="$(var.RepoDir)\installer\License.rtf" Id="License.rtf" />
       </Component>
-      <Component Id="Notice_md" Win64="yes">
-        <File Source="$(var.RepoDir)\Notice.md" Id="Notice.md" KeyPath="yes" />
+      <Component Id="Notice_md" Win64="yes" Guid="1671B5F5-1260-42CF-83A8-9B3430DFF8C5">
+        <RegistryKey Root="HKCU" Key="Software\Classes\powertoys\components">
+          <RegistryValue Type="string" Name="Notice_md" Value="" KeyPath="yes"/>
+        </RegistryKey>
+        <File Source="$(var.RepoDir)\Notice.md" Id="Notice.md" />
       </Component>
     </DirectoryRef>
 
@@ -70,21 +85,27 @@
     <DirectoryRef Id="DotnetDlls">
       <!-- !Warning! Make sure to change Component Guid if you update the file list -->
       <Component Id="Dlls_DotnetFiles_Component" Guid="19488F16-3399-40AB-B7C4-CE3F27C1B294" Win64="yes">
-      <?foreach File in $(var.DotnetRuntimeFiles)?>
-        <File Source="$(var.BinDir)Settings\$(var.File)" />
-      <?endforeach?>
-      <?foreach File in $(var.DotnetRuntimeWPFFiles)?>
-        <File Source="$(var.BinDir)\modules\\ColorPicker\$(var.File)" />
-      <?endforeach?>
+        <RegistryKey Root="HKCU" Key="Software\Classes\powertoys\components">
+          <RegistryValue Type="string" Name="Dlls_DotnetFiles_Component" Value="" KeyPath="yes"/>
+        </RegistryKey>
+        <?foreach File in $(var.DotnetRuntimeFiles)?>
+          <File Source="$(var.BinDir)Settings\$(var.File)" />
+        <?endforeach?>
+        <?foreach File in $(var.DotnetRuntimeWPFFiles)?>
+          <File Source="$(var.BinDir)\modules\\ColorPicker\$(var.File)" />
+        <?endforeach?>
       </Component>
     </DirectoryRef>
 
     <DirectoryRef Id="PowerToysInteropDlls">
-      <?foreach File in $(var.PowerToysInteropFiles)?>
-      <Component Id="Dlls_PowerToysInteropFiles_$(var.File)" Win64="yes">
-        <File Id="Dlls_PowerToysInterop_File_$(var.File)" Source="$(var.BinDir)\$(var.File)" />
+      <Component Id="Dlls_PowerToysInteropFiles_Component" Win64="yes" Guid="9ED70966-805B-4E7E-AFB0-879D4DE23818">
+        <RegistryKey Root="HKCU" Key="Software\Classes\powertoys\components">
+          <RegistryValue Type="string" Name="Dlls_PowerToysInteropFiles_Component" Value="" KeyPath="yes"/>
+        </RegistryKey>
+        <?foreach File in $(var.PowerToysInteropFiles)?>
+          <File Id="Dlls_PowerToysInterop_File_$(var.File)" Source="$(var.BinDir)\$(var.File)" />
+        <?endforeach?>
       </Component>
-      <?endforeach?>
     </DirectoryRef>
 
     <DirectoryRef Id="ModulesInstallFolder" FileSource="$(var.BinDir)modules\">
@@ -134,9 +155,7 @@
         <ComponentRef Id="Module_PowerPreview_Registry" />
 
         <ComponentRef Id="Dlls_DotnetFiles_Component" />
-        <?foreach File in $(var.PowerToysInteropFiles)?>
-        <ComponentRef Id="Dlls_PowerToysInteropFiles_$(var.File)" />
-        <?endforeach?>
+        <ComponentRef Id="Dlls_PowerToysInteropFiles_Component" />
     </ComponentGroup>
   </Fragment>
 </Wix>

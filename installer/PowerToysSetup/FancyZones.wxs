@@ -13,10 +13,13 @@
     <!--FancyZonesFiles_Component_Def-->
     </DirectoryRef>
 
-    <ComponentGroup Id="FancyZonesComponentGroup" Directory="INSTALLFOLDER">
-      <?foreach File in $(var.FancyZonesFiles)?>
-        <ComponentRef Id="FancyZonesFiles_Comp_$(var.File)" />
-      <?endforeach?>
+    <ComponentGroup Id="FancyZonesComponentGroup">
+      <Component Id="RemoveFancyZonesFolder" Guid="A04620E9-2C1F-4986-99FA-B1545C7AC4D0" Directory="FancyZonesInstallFolder" >
+        <RegistryKey Root="HKCU" Key="Software\Classes\powertoys\components">
+          <RegistryValue Type="string" Name="RemoveFancyZonesFolder" Value="" KeyPath="yes"/>
+        </RegistryKey>
+        <RemoveFolder Id="RemoveFolderFancyZonesFolder" Directory="FancyZonesInstallFolder" On="uninstall"/>
+      </Component>
     </ComponentGroup>
   </Fragment>
 </Wix>

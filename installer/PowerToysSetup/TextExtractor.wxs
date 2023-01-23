@@ -13,10 +13,13 @@
     <!--TextExtractorFiles_Component_Def-->
     </DirectoryRef>
 
-    <ComponentGroup Id="TextExtractorComponentGroup" Directory="INSTALLFOLDER">
-      <?foreach File in $(var.TextExtractorFiles)?>
-        <ComponentRef Id="TextExtractorFiles_Comp_$(var.File)" />
-      <?endforeach?>
+    <ComponentGroup Id="TextExtractorComponentGroup">
+      <Component Id="RemoveTextExtractorFolder" Guid="0F988887-25BE-43D1-A983-78A79EC2CE41" Directory="PowerOCRInstallFolder" >
+        <RegistryKey Root="HKCU" Key="Software\Classes\powertoys\components">
+          <RegistryValue Type="string" Name="RemoveTextExtractorFolder" Value="" KeyPath="yes"/>
+        </RegistryKey>
+        <RemoveFolder Id="RemoveFolderPowerOCRInstallFolder" Directory="PowerOCRInstallFolder" On="uninstall"/>
+      </Component>
     </ComponentGroup>
   </Fragment>
 </Wix>

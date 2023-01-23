@@ -49,7 +49,7 @@ if ($isWinAppSdkProj -eq $True) {
 
 $fileExclusionList = @("*Test*", "*.pdb", "*.lastcodeanalysissucceeded", "backup_restore_settings.json", "createdump.exe") + $interopFilesList + $winAppSDKfilesList
 
-$fileInclusionList = @("*.dll", "*.exe", "*.json", "*.msix", "*ico", "index.html", "monacoSpecialLanguages.js", "resources.pri")
+$fileInclusionList = @("*.dll", "*.exe", "*.json", "*.msix", "*ico", "*cur", "*svg", "index.html", "reg.js", "monacoSpecialLanguages.js", "resources.pri")
 
 if ($fileDepsJson -eq [string]::Empty) {
     $fileDepsRoot = $depsPath

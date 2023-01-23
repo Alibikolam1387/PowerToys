@@ -18,17 +18,37 @@ $wxsFile | ForEach-Object {
     }
 }
 
+$componentId = "$($fileListName)_Component"
+
 $componentDefs = "`r`n"
+$componentDefs +=
+@"
+        <Component Id="$($componentId)" Win64="yes" Guid="$((New-Guid).ToString().ToUpper())">
+          <RegistryKey Root="HKCU" Key="Software\Classes\powertoys\components">
+            <RegistryValue Type="string" Name="$($componentId)" Value="" KeyPath="yes"/>
+          </RegistryKey>`r`n
+"@
 
 foreach ($file in $fileList) {
+    $fileTmp = $file -replace "-", "_"
     $componentDefs +=
 @"
-        <Component Id="$($fileListName)_Comp_$($file)" Win64="yes">
-          <File Id="$($fileListName)_File_$($file)" Source="`$(var.$($fileListName)Path)\$($file)" />
-        </Component>`r`n
+          <File Id="$($fileListName)_File_$($fileTmp)" Source="`$(var.$($fileListName)Path)\$($file)" />`r`n
 "@
 }
 
+$componentDefs +=
+@"
+        </Component>`r`n
+"@
+
 $wxsFile = $wxsFile -replace "\s+(<!--$($fileListName)_Component_Def-->)", $componentDefs
+
+$componentRef =
+@"
+        <ComponentRef Id="$($componentId)" />
+"@
+
+$wxsFile = $wxsFile -replace "\s+(</ComponentGroup>)", "$componentRef`r`n    </ComponentGroup>"
 
 Set-Content -Path $wxsFilePath -Value $wxsFile

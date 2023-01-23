@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" InitialTargets="EnsureNuGetPackageBuildImports" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\wix.props" Condition="Exists('..\wix.props')" />
   <Import Project="..\..\src\Version.props" />
@@ -46,6 +46,10 @@ call "..\..\publish.cmd" arm64
     <SuppressAclReset>True</SuppressAclReset>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <!-- 1076 and ICE91 - warning: using this configuration for perMachine install could cause problems. -->
+    <!-- 1026 - warning: file ID is too long -->
+    <SuppressIces>ICE91</SuppressIces>
+    <SuppressSpecificWarnings>1026;1076</SuppressSpecificWarnings>
   </PropertyGroup>
   <PropertyGroup>
     <OutputPath>$(Platform)\$(Configuration)\</OutputPath>
@@ -83,10 +87,10 @@ call "..\..\publish.cmd" arm64
     <Compile Include="Tools.wxs" />
     <Compile Include="VideoConference.wxs" />
 
-    <Compile Include="MonacoSRC.wxs" />
+    <!--<Compile Include="MonacoSRC.wxs" />
 
     <Compile Include="Core.wxs" />
-    <Compile Include="Resources.wxs" />
+    <Compile Include="Resources.wxs" />-->
     <Compile Include="WinAppSDK.wxs" />
   </ItemGroup>
   <ItemGroup>

@@ -30,6 +30,9 @@ call "..\..\publish.cmd" arm64
     call move /Y ..\..\Core.wxs.bk ..\..\Core.wxs
     call move /Y ..\..\..\PowerToysSetupCustomActions\DepsFilesLists.h.bk ..\..\..\PowerToysSetupCustomActions\DepsFilesLists.h
     </PostBuildEvent>
+    <PreBuildEvent>
+    call powershell.exe -File ..\..\generateAllFileComponents.ps1
+    </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <Name>PowerToysInstaller</Name>

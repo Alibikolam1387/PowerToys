@@ -27,6 +27,7 @@
         </RegistryKey>
         <RemoveFolder Id="RemoveFolderFileExplorerPreviewFolder" Directory="FileExplorerPreviewInstallFolder" On="uninstall"/>
         <RemoveFolder Id="RemoveFolderMonacoCustomLanguagesFolder" Directory="MonacoPreviewHandlerMonacoCustomLanguagesFolder" On="uninstall"/>
+        <RemoveFolder Id="RemoveFolderMonacoPreviewHandlerMonacoSRCFolder" Directory="MonacoPreviewHandlerMonacoSRCFolder" On="uninstall"/>
       </Component>
     </ComponentGroup>
   </Fragment>

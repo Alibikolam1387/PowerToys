@@ -51,7 +51,8 @@
     <Property Id="ARPPRODUCTICON" Value="powertoys.exe" />
 
     <Feature Id="CoreFeature" Title="PowerToys" AllowAdvertise="no" Absent="disallow" TypicalDefault="install"
-             Description="Contains the Shortcut Guide and Fancy Zones features.">
+             Description="Contains all PowerToys features.">
+      <ComponentGroupRef Id="CoreComponents" />
 
       <ComponentGroupRef Id="AlwaysOnTopComponentGroup" />
       <ComponentGroupRef Id="AwakeComponentGroup" />
@@ -72,10 +73,10 @@
       <ComponentGroupRef Id="TextExtractorComponentGroup" />
       <ComponentGroupRef Id="VideoConferenceComponentGroup" />
 
-      <!--<ComponentGroupRef Id="ResourcesComponentGroup" />-->
+      <ComponentGroupRef Id="ResourcesComponentGroup" />
       <ComponentGroupRef Id="WindowsAppSDKComponentGroup" />
       <ComponentGroupRef Id="ToolComponentGroup" />
-      <!--<ComponentGroupRef Id="MonacoSRCHeatGenerated" />-->
+      <ComponentGroupRef Id="MonacoSRCHeatGenerated" />
     </Feature>
 
     <SetProperty Id="ARPINSTALLLOCATION" Value="[INSTALLFOLDER]" After="CostFinalize" />

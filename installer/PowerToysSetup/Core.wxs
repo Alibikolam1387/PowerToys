@@ -142,7 +142,17 @@
     </DirectoryRef>
   </Fragment>
   <Fragment>
-    <ComponentGroup Id="CoreComponents" Directory="INSTALLFOLDER">
+    <ComponentGroup Id="CoreComponents">
+        <Component Id="RemoveCoreFolder" Guid="9330BD69-2D12-4D98-B0C7-66C99564D619" Directory="INSTALLFOLDER" >
+          <RegistryKey Root="HKCU" Key="Software\Classes\powertoys\components">
+            <RegistryValue Type="string" Name="RemoveCoreFolder" Value="" KeyPath="yes"/>
+          </RegistryKey>
+          <RemoveFolder Id="RemoveDotnetDlls" Directory="DotnetDlls" On="uninstall"/>
+          <RemoveFolder Id="RemovePowerToysInteropDlls" Directory="PowerToysInteropDlls" On="uninstall"/>
+          <RemoveFolder Id="RemoveModulesInstallFolder" Directory="ModulesInstallFolder" On="uninstall"/>
+          <RemoveFolder Id="RemoveDllsFolder" Directory="DllsFolder" On="uninstall"/>
+          <RemoveFolder Id="RemoveINSTALLFOLDER" Directory="INSTALLFOLDER" On="uninstall"/>
+        </Component>
         <ComponentRef Id="powertoys_exe" />
         <ComponentRef Id="PowerToysStartMenuShortcut"/>
         <ComponentRef Id="BackgroundActivator_dll" />

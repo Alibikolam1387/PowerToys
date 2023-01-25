@@ -87,10 +87,10 @@ call "..\..\publish.cmd" arm64
     <Compile Include="Tools.wxs" />
     <Compile Include="VideoConference.wxs" />
 
-    <!--<Compile Include="MonacoSRC.wxs" />
+    <Compile Include="MonacoSRC.wxs" />
 
     <Compile Include="Core.wxs" />
-    <Compile Include="Resources.wxs" />-->
+    <Compile Include="Resources.wxs" />
     <Compile Include="WinAppSDK.wxs" />
   </ItemGroup>
   <ItemGroup>
@@ -141,18 +141,19 @@ call "..\..\publish.cmd" arm64
 	</Target>
 	<Target Name="AfterBuild">
 	</Target>
-	-->
   <Target Name="BeforeBuild">
     <HeatDirectory Directory="..\..\src\modules\previewpane\MonacoPreviewHandler\monacoSRC"
       PreprocessorVariable="var.MonacoSRCHarvestPath"
       OutputFile="MonacoSRC.wxs"
       ComponentGroupName="MonacoSRCHeatGenerated"
       DirectoryRefId="MonacoPreviewHandlerMonacoSRCFolder"
-      AutogenerateGuids="true"
+      AutogenerateGuids="false"
+      GenerateGuidsNow="true" 
       ToolPath="$(WixToolPath)"
       RunAsSeparateProcess="true"
-      SuppressFragments="true"
-      SuppressRegistry="true"
-      SuppressRootDirectory="true" />
-  </Target>
+      SuppressFragments="false"
+      SuppressRegistry="false"
+      SuppressRootDirectory="true"/>
+  </Target>	-->
+
 </Project>

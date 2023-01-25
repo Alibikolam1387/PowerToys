@@ -10,7 +10,7 @@ Param(
     # If there is no deps.json file, just pass path to files
     [Parameter(Mandatory = $False, Position = 4)]
     [string]$depsPath,
-    # launcher plugins are being loaded into louncher process,
+    # launcher plugins are being loaded into launcher process,
     # so there are some additional dependencies to skip
     [Parameter(Mandatory = $False, Position = 5)]
     [bool]$isLauncherPlugin,

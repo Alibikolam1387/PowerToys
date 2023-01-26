@@ -31,7 +31,7 @@ call "..\..\publish.cmd" arm64
     call move /Y ..\..\..\PowerToysSetupCustomActions\DepsFilesLists.h.bk ..\..\..\PowerToysSetupCustomActions\DepsFilesLists.h
     </PostBuildEvent>
     <PreBuildEvent>
-    call powershell.exe -File ..\..\generateAllFileComponents.ps1
+    call powershell.exe -File ..\..\generateAllFileComponents.ps1 -platform $(Platform)
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

@@ -2079,14 +2079,8 @@ workspaces
 wox
 wparam
 wpf
-<<<<<<< HEAD
-<<<<<<< HEAD
 wpfdepsjsonpath
-=======
 wpfgfx
->>>>>>> 24ea411c6 (spellcheck)
-=======
->>>>>>> 1c2612abb (Spellcheck)
 wpftmp
 wpr
 wprp

@@ -153,7 +153,28 @@ steps:
     filePath: '$(build.sourcesdirectory)\.pipelines\installWiX.ps1'
 
 - task: VSBuild@1
-  displayName: 'Build PowerToys MSI'
+  displayName: 'Build PowerToys per-machine MSI'
+  inputs:
+    solution: '**\installer\PowerToysSetup.sln'
+    vsVersion: 17.0
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+    msbuildArgs: /t:PowerToysInstaller ${{ parameters.additionalBuildArguments }} /p:PerMachine=true
+    maximumCpuCount: true
+
+- task: VSBuild@1
+  displayName: 'Build PowerToys per-machine Bootstrapper'
+  inputs:
+    solution: '**\installer\PowerToysSetup.sln'
+    vsVersion: 17.0
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+    msbuildArgs: /t:PowerToysBootstrapper ${{ parameters.additionalBuildArguments }} /p:PerMachine=true
+    clean: false
+    maximumCpuCount: true
+
+- task: VSBuild@1
+  displayName: 'Build PowerToys per-user MSI'
   inputs:
     solution: '**\installer\PowerToysSetup.sln'
     vsVersion: 17.0
@@ -163,7 +184,7 @@ steps:
     maximumCpuCount: true
 
 - task: VSBuild@1
-  displayName: 'Build PowerToys Bootstrapper'
+  displayName: 'Build PowerToys per-user Bootstrapper'
   inputs:
     solution: '**\installer\PowerToysSetup.sln'
     vsVersion: 17.0

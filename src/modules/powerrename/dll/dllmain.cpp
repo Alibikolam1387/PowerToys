@@ -14,9 +14,16 @@
 #include <common/utils/logger_helper.h>
 #include <common/utils/package.h>
 #include <common/utils/process_path.h>
+#include <common/utils/registry.h>
 #include <common/utils/resources.h>
 
 #include <atomic>
+
+namespace
+{
+    // Class CLSID - see CPowerRenameMenu definition in PowerRenameExt.h
+    const wchar_t CLASS_CLSID[] = L"{0440049F-D1DC-4E46-B27B-98393D79486B}";
+}
 
 std::atomic<DWORD> g_dwModuleRefCount = 0;
 HINSTANCE g_hInst = 0;
@@ -192,6 +199,11 @@ public:
         Logger::info(L"PowerRename enabled");
         m_enabled = true;
 
+        if (!get_registry_change_set(true).apply())
+        {
+            Logger::error(L"Applying registry entries failed");
+        }
+
         if (package::IsWin11OrGreater())
         {
             std::wstring path = get_module_folderpath(g_hInst);
@@ -209,6 +221,11 @@ public:
     // Disable the powertoy
     virtual void disable()
     {
+        if (!get_registry_change_set(true).unApply())
+        {
+            Logger::error(L"Un-applying registry entries failed");
+        }
+
         Logger::info(L"PowerRename disabled");
         m_enabled = false;
         save_settings();
@@ -330,6 +347,36 @@ public:
     }
 
     ~PowerRenameModule(){};
+
+    registry::ChangeSet get_registry_change_set(const bool perUser)
+    {
+        const HKEY scope = perUser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE;
+
+        std::wstring clsidPath = L"Software\\Classes\\CLSID";
+        clsidPath += L'\\';
+        clsidPath += CLASS_CLSID;
+
+        std::wstring inprocServerPath = clsidPath;
+        inprocServerPath += L'\\';
+        inprocServerPath += L"InprocServer32";
+
+        const std::wstring installationDir = get_module_folderpath();
+        const std::wstring handlerPath = (std::filesystem::path{ installationDir } /
+                                          LR"d(modules\ImageResizer\PowerToys.PowerRenameExt.dll)d")
+                                             .wstring();
+
+        using vec_t = std::vector<registry::ValueChange>;
+
+        vec_t changes = { { scope, clsidPath, std::nullopt, L"PowerRename Shell Extension" },
+                          { scope, clsidPath, L"ContextMenuOptIn", L"" },
+                          { scope, inprocServerPath, std::nullopt, handlerPath },
+                          { scope, inprocServerPath, L"ThreadingModel", L"Apartment" } };
+
+        const std::wstring contextMenuHandlerRegPath = L"SOFTWARE\\Classes\\AllFileSystemObjects\\ShellEx\\ContextMenuHandlers\\PowerRenameExt";
+        changes.push_back({ scope, contextMenuHandlerRegPath, std::nullopt, CLASS_CLSID });
+
+        return { changes };
+    }
 };
 
 extern "C" __declspec(dllexport) PowertoyModuleIface* __cdecl powertoy_create()

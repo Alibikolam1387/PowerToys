@@ -16,6 +16,54 @@
 
 namespace registry
 {
+    namespace install_scope
+    {
+        const wchar_t INSTALL_SCOPE_REG_KEY[] = L"Software\\Classes\\powertoys\\";
+
+        enum class InstallScope
+        {
+            PerMachine = 0,
+            PerUser,
+        };
+
+        inline const InstallScope get_current_install_scope()
+        {
+            HKEY key{};
+            if (RegOpenKeyExW(HKEY_CURRENT_USER,
+                              INSTALL_SCOPE_REG_KEY,
+                              0,
+                              KEY_READ,
+                              &key) != ERROR_SUCCESS)
+            {
+                return InstallScope::PerMachine;
+            }
+
+            DWORD per_machine{ 1 };
+            DWORD per_machine_size = static_cast<DWORD>(sizeof(per_machine));
+            if (RegGetValueW(
+                    key,
+                    nullptr,
+                    L"PerMachine",
+                    RRF_RT_REG_DWORD,
+                    nullptr,
+                    &per_machine,
+                    &per_machine_size) != ERROR_SUCCESS)
+            {
+                // Registry value does not exist - old version - per-machine
+                RegCloseKey(key);
+                return InstallScope::PerMachine;
+            }
+            RegCloseKey(key);
+
+            if (per_machine == 0)
+            {
+                return InstallScope::PerUser;
+            }
+
+            return InstallScope::PerMachine;
+        }
+    }
+
     namespace detail
     {
         struct on_exit

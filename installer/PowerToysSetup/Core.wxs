@@ -6,12 +6,21 @@
 
   <?define PowerToysInteropFiles=concrt140.dll;msvcp140.dll;msvcp140_1.dll;msvcp140_2.dll;msvcp140_atomic_wait.dll;msvcp140_codecvt_ids.dll;PowerToys.Interop.dll;vcamp140.dll;vccorlib140.dll;vcomp140.dll;vcruntime140.dll;vcruntime140_1.dll?>
 
-  <?define DotnetRuntimeFiles= ?>
+  <?define DotnetRuntimeFiles=?>
 
-  <?define DotnetRuntimeWPFFiles= ?>
+  <?define DotnetRuntimeWPFFiles=?>
 
   <Fragment>
     <DirectoryRef Id="INSTALLFOLDER" FileSource="$(var.BinDir)">
+      <Component Id="powertoys_per_machine_comp" Win64="yes">
+        <RegistryKey Root="HKCU" Key="Software\Classes\powertoys">
+          <?if $(var.PerMachine) = "true"?>
+            <RegistryValue Type="integer" Name="PerMachine" Value="1" />
+          <?else?>
+            <RegistryValue Type="integer" Name="PerMachine" Value="0" />
+          <?endif?>
+        </RegistryKey>
+      </Component>
       <Component Id="powertoys_toast_clsid" Win64="yes">
         <RemoveFolder Id='Remove_powertoys_toast_clsid' On='uninstall' />
         <RegistryKey Root="HKCU" Key="Software\Classes\CLSID\{DD5CACDA-7C2E-4997-A62A-04A597B58F76}">
@@ -108,19 +117,6 @@
       </Component>
     </DirectoryRef>
 
-    <DirectoryRef Id="ModulesInstallFolder" FileSource="$(var.BinDir)modules\">
-      <Component Id="Module_PowerPreview_Registry" Win64="yes">
-        <!-- Update Key to use IE11 for prevhost.exe -->
-        <RegistryKey Root="HKCU" Key="Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION">
-          <RegistryValue Type="integer" Name="prevhost.exe" Value="11000" />
-        </RegistryKey>
-        <!-- Update Key to use IE11 for dllhost.exe -->
-        <RegistryKey Root="HKCU" Key="Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION">
-          <RegistryValue Type="integer" Name="dllhost.exe" Value="11000" />
-        </RegistryKey>
-      </Component>
-    </DirectoryRef>
-
     <DirectoryRef Id="DesktopFolder">
       <Component Id="DesktopShortcut" >
         <Condition>INSTALLDESKTOPSHORTCUT</Condition>
@@ -158,11 +154,11 @@
         <ComponentRef Id="BackgroundActivator_dll" />
         <ComponentRef Id="PowerToys_ActionRunner_exe" />
         <ComponentRef Id="PowerToys_Update_exe" />
+        <ComponentRef Id="powertoys_per_machine_comp" />
         <ComponentRef Id="powertoys_toast_clsid" />
         <ComponentRef Id="License_rtf" />
         <ComponentRef Id="Notice_md" />
         <ComponentRef Id="DesktopShortcut" />
-        <ComponentRef Id="Module_PowerPreview_Registry" />
 
         <ComponentRef Id="Dlls_DotnetFiles_Component" />
         <ComponentRef Id="Dlls_PowerToysInteropFiles_Component" />

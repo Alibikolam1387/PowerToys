@@ -11,8 +11,8 @@
     simulate the build pipeline doing that for you. -->
     <PreBuildEvent>IF NOT DEFINED IsPipeline (
 call "$([MSBuild]::GetVsInstallRoot())\Common7\Tools\VsDevCmd.bat" -arch=amd64 -host_arch=amd64 -winsdk=10.0.19041.0
-SET PTRoot=..\..\..\..
-call "..\..\publish.cmd" x64
+SET PTRoot=..\..\..\..\..
+call "..\..\..\publish.cmd" x64
 )</PreBuildEvent>
   </PropertyGroup>
 
@@ -27,16 +27,42 @@ call "..\..\publish.cmd" arm64
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
     <PostBuildEvent>
-    call move /Y ..\..\Core.wxs.bk ..\..\Core.wxs
-    call move /Y ..\..\..\PowerToysSetupCustomActions\DepsFilesLists.h.bk ..\..\..\PowerToysSetupCustomActions\DepsFilesLists.h
+    call move /Y ..\..\..\AlwaysOnTop.wxs.bk ..\..\..\AlwaysOnTop.wxs
+    call move /Y ..\..\..\Awake.wxs.bk ..\..\..\Awake.wxs
+    call move /Y ..\..\..\ColorPicker.wxs.bk ..\..\..\ColorPicker.wxs
+    call move /Y ..\..\..\Core.wxs.bk ..\..\..\Core.wxs
+    call move /Y ..\..\..\FancyZones.wxs.bk ..\..\..\FancyZones.wxs
+    call move /Y ..\..\..\FileExplorerPreview.wxs.bk ..\..\..\FileExplorerPreview.wxs
+    call move /Y ..\..\..\FileLocksmith.wxs.bk ..\..\..\FileLocksmith.wxs
+    call move /Y ..\..\..\Hosts.wxs.bk ..\..\..\Hosts.wxs
+    call move /Y ..\..\..\ImageResizer.wxs.bk ..\..\..\ImageResizer.wxs
+    call move /Y ..\..\..\KeyboardManager.wxs.bk ..\..\..\KeyboardManager.wxs
+    call move /Y ..\..\..\MeasureTool.wxs.bk ..\..\..\MeasureTool.wxs
+    call move /Y ..\..\..\MouseUtils.wxs.bk ..\..\..\MouseUtils.wxs
+    call move /Y ..\..\..\PowerAccent.wxs.bk ..\..\..\PowerAccent.wxs
+    call move /Y ..\..\..\PowerRename.wxs.bk ..\..\..\PowerRename.wxs
+    call move /Y ..\..\..\Product.wxs.bk ..\..\..\Product.wxs
+    call move /Y ..\..\..\Resources.wxs.bk ..\..\..\Resources.wxs
+    call move /Y ..\..\..\Run.wxs.bk ..\..\..\Run.wxs
+    call move /Y ..\..\..\Settings.wxs.bk ..\..\..\Settings.wxs
+    call move /Y ..\..\..\ShortcutGuide.wxs.bk ..\..\..\ShortcutGuide.wxs
+    call move /Y ..\..\..\TextExtractor.wxs.bk ..\..\..\TextExtractor.wxs
+    call move /Y ..\..\..\Tools.wxs.bk ..\..\..\Tools.wxs
+    call move /Y ..\..\..\VideoConference.wxs.bk ..\..\..\VideoConference.wxs
+    call move /Y ..\..\..\WinAppSDK.wxs.bk ..\..\..\WinAppSDK.wxs
+    call move /Y ..\..\..\..\PowerToysSetupCustomActions\DepsFilesLists.h.bk ..\..\..\..\PowerToysSetupCustomActions\DepsFilesLists.h
     </PostBuildEvent>
-    <PreBuildEvent>
-    call powershell.exe -File ..\..\generateAllFileComponents.ps1 -platform $(Platform)
-    </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <Name>PowerToysInstaller</Name>
   </PropertyGroup>
+  <PropertyGroup Label="UserMacros" Condition=" '$(PerMachine)' == 'true' ">
+    <DefineConstants>$(DefineConstants);PerMachine=true</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Label="UserMacros" Condition=" '$(PerMachine)' == '' ">
+    <DefineConstants>$(DefineConstants);PerMachine=</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup>
     <!-- We do not support debug installer builds -->
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration> 
@@ -44,7 +70,8 @@ call "..\..\publish.cmd" arm64
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>022a9d30-7c4f-416d-a9df-5ff2661cc0ad</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>PowerToysSetup-$(Version)-$(Platform)</OutputName>
+    <OutputName Condition=" '$(PerMachine)' == 'true' ">PowerToysSetup-$(Version)-$(Platform)-perMachine</OutputName>
+    <OutputName Condition=" '$(PerMachine)' == '' ">PowerToysSetup-$(Version)-$(Platform)-perUser</OutputName>
     <OutputType>Package</OutputType>
     <SuppressAclReset>True</SuppressAclReset>
     <NuGetPackageImportStamp>
@@ -55,8 +82,10 @@ call "..\..\publish.cmd" arm64
     <SuppressSpecificWarnings>1026;1076</SuppressSpecificWarnings>
   </PropertyGroup>
   <PropertyGroup>
-    <OutputPath>$(Platform)\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+    <OutputPath Condition=" '$(PerMachine)' == 'true' ">$(Platform)\$(Configuration)\perMachine</OutputPath>
+    <OutputPath Condition=" '$(PerMachine)' == '' ">$(Platform)\$(Configuration)\perUser</OutputPath>
+    <IntermediateOutputPath Condition=" '$(PerMachine)' == 'true' ">obj\$(Platform)\$(Configuration)\perMachine</IntermediateOutputPath>
+    <IntermediateOutputPath Condition=" '$(PerMachine)' == '' ">obj\$(Platform)\$(Configuration)\perUser</IntermediateOutputPath>
     <SuppressIces>ICE40</SuppressIces>
   </PropertyGroup>
   <PropertyGroup>

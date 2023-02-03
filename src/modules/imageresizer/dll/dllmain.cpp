@@ -11,7 +11,7 @@
 #include <common/SettingsAPI/settings_objects.h>
 #include <common/utils/package.h>
 #include <common/utils/process_path.h>
-#include <common/utils/registry.h>
+#include <common/utils/modulesRegistry.h>
 #include <common/utils/resources.h>
 #include <common/utils/logger_helper.h>
 #include <interface/powertoy_module_interface.h>
@@ -19,12 +19,6 @@
 #include <filesystem>
 #include <string>
 #include <vector>
-
-namespace
-{
-    // Class CLSID - see CContextMenuHandler definition in ContextMenuHandler.h
-    const wchar_t CLASS_CLSID[] = L"{51B4D7E5-7568-4234-B4BB-47FB3C016A69}";
-}
 
 CImageResizerExtModule _AtlModule;
 HINSTANCE g_hInst_imageResizer = 0;
@@ -114,7 +108,8 @@ public:
         m_enabled = true;
         CSettingsInstance().SetEnabled(m_enabled);
 
-        if (!get_registry_change_set(true).apply())
+        const std::wstring installationDir = get_module_folderpath();
+        if (!getImageResizerContextMenuChangeSet(installationDir ,true).apply())
         {
             Logger::error(L"Applying registry entries failed");
         }
@@ -136,7 +131,8 @@ public:
     // Disable the powertoy
     virtual void disable()
     {
-        if (!get_registry_change_set(true).unApply())
+        const std::wstring installationDir = get_module_folderpath();
+        if (!getImageResizerContextMenuChangeSet(installationDir, true).unApply())
         {
             Logger::error(L"Un-applying registry entries failed");
         }
@@ -150,59 +146,6 @@ public:
     virtual bool is_enabled() override
     {
         return m_enabled;
-    }
-
-    registry::ChangeSet get_registry_change_set(const bool perUser)
-    {
-        const std::vector<std::wstring> extensions = { L".bmp",
-                                                       L".dib",
-                                                       L".gif",
-                                                       L".jfif",
-                                                       L".jpe",
-                                                       L".jpeg",
-                                                       L".jpg",
-                                                       L".jxr",
-                                                       L".png",
-                                                       L".rle",
-                                                       L".tif",
-                                                       L".tiff",
-                                                       L".wdp" };
-
-        const HKEY scope = perUser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE;
-
-        std::wstring clsidPath = L"Software\\Classes\\CLSID";
-        clsidPath += L'\\';
-        clsidPath += CLASS_CLSID;
-
-        std::wstring inprocServerPath = clsidPath;
-        inprocServerPath += L'\\';
-        inprocServerPath += L"InprocServer32";
-
-        const std::wstring installationDir = get_module_folderpath();
-        const std::wstring handlerPath = (std::filesystem::path{ installationDir } /
-                                          LR"d(modules\ImageResizer\PowerToys.ImageResizerExt.dll)d")
-                                             .wstring();
-
-        using vec_t = std::vector<registry::ValueChange>;
-
-        vec_t changes = { { scope, inprocServerPath, std::nullopt, handlerPath },
-                          { scope, inprocServerPath, L"ThreadingModel", L"Apartment" } };
-
-        const std::wstring dragDropRegPath = L"SOFTWARE\\Classes\\Directory\\ShellEx\\DragDropHandlers\\ImageResizer";
-        changes.push_back({ scope, dragDropRegPath, std::nullopt, CLASS_CLSID });
-
-        const std::wstring extensionContextMenuHandlerRegPath = L"SOFTWARE\\Classes\\SystemFileAssociations\\<pwt_ext>\\ShellEx\\ContextMenuHandlers\\ImageResizer";
-        const std::size_t replacePos = extensionContextMenuHandlerRegPath.find(L"<pwt_ext>");
-        const std::size_t replaceLen = std::wstring(L"<pwt_ext>").size();
-
-        for (const auto& extension : extensions)
-        {
-            std::wstring currentPath = extensionContextMenuHandlerRegPath;
-            currentPath.replace(replacePos, replaceLen, extension);
-            changes.push_back({ scope, currentPath, std::nullopt, CLASS_CLSID });
-        }
-
-        return { changes };
     }
 };
 

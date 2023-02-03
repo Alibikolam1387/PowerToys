@@ -192,6 +192,89 @@ inline registry::ChangeSet getStlThumbnailHandlerChangeSet(const std::wstring in
                                   NonLocalizable::ExtSTL);
 }
 
+inline registry::ChangeSet getPowerRenameContextMenuChangeSet(const std::wstring installationDir, const bool perUser)
+{
+    const HKEY scope = perUser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE;
+
+    const wchar_t powerRenameClassCLSID[] = L"{0440049F-D1DC-4E46-B27B-98393D79486B}";
+    std::wstring clsidPath = L"Software\\Classes\\CLSID";
+    clsidPath += L'\\';
+    clsidPath += powerRenameClassCLSID;
+
+    std::wstring inprocServerPath = clsidPath;
+    inprocServerPath += L'\\';
+    inprocServerPath += L"InprocServer32";
+
+    const std::wstring handlerPath = (std::filesystem::path{ installationDir } /
+                                        LR"d(modules\PowerRename\PowerToys.PowerRenameExt.dll)d")
+                                            .wstring();
+
+    using vec_t = std::vector<registry::ValueChange>;
+
+    vec_t changes = { { scope, clsidPath, std::nullopt, L"PowerRename Shell Extension" },
+                        { scope, clsidPath, L"ContextMenuOptIn", L"" },
+                        { scope, inprocServerPath, std::nullopt, handlerPath },
+                        { scope, inprocServerPath, L"ThreadingModel", L"Apartment" } };
+
+    const std::wstring contextMenuHandlerRegPath = L"SOFTWARE\\Classes\\AllFileSystemObjects\\ShellEx\\ContextMenuHandlers\\PowerRenameExt";
+    changes.push_back({ scope, contextMenuHandlerRegPath, std::nullopt, powerRenameClassCLSID });
+
+    return { changes };
+}
+
+inline registry::ChangeSet getImageResizerContextMenuChangeSet(const std::wstring installationDir, const bool perUser)
+{
+    const std::vector<std::wstring> extensions = { L".bmp",
+                                                    L".dib",
+                                                    L".gif",
+                                                    L".jfif",
+                                                    L".jpe",
+                                                    L".jpeg",
+                                                    L".jpg",
+                                                    L".jxr",
+                                                    L".png",
+                                                    L".rle",
+                                                    L".tif",
+                                                    L".tiff",
+                                                    L".wdp" };
+
+    const HKEY scope = perUser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE;
+    const wchar_t imageResizerClassCLSID[] = L"{51B4D7E5-7568-4234-B4BB-47FB3C016A69}";
+
+    std::wstring clsidPath = L"Software\\Classes\\CLSID";
+    clsidPath += L'\\';
+    clsidPath += imageResizerClassCLSID;
+
+    std::wstring inprocServerPath = clsidPath;
+    inprocServerPath += L'\\';
+    inprocServerPath += L"InprocServer32";
+
+    const std::wstring handlerPath = (std::filesystem::path{ installationDir } /
+                                        LR"d(modules\ImageResizer\PowerToys.ImageResizerExt.dll)d")
+                                            .wstring();
+
+    using vec_t = std::vector<registry::ValueChange>;
+
+    vec_t changes = { { scope, inprocServerPath, std::nullopt, handlerPath },
+                        { scope, inprocServerPath, L"ThreadingModel", L"Apartment" } };
+
+    const std::wstring dragDropRegPath = L"SOFTWARE\\Classes\\Directory\\ShellEx\\DragDropHandlers\\ImageResizer";
+    changes.push_back({ scope, dragDropRegPath, std::nullopt, imageResizerClassCLSID });
+
+    const std::wstring extensionContextMenuHandlerRegPath = L"SOFTWARE\\Classes\\SystemFileAssociations\\<pwt_ext>\\ShellEx\\ContextMenuHandlers\\ImageResizer";
+    const std::size_t replacePos = extensionContextMenuHandlerRegPath.find(L"<pwt_ext>");
+    const std::size_t replaceLen = std::wstring(L"<pwt_ext>").size();
+
+    for (const auto& extension : extensions)
+    {
+        std::wstring currentPath = extensionContextMenuHandlerRegPath;
+        currentPath.replace(replacePos, replaceLen, extension);
+        changes.push_back({ scope, currentPath, std::nullopt, imageResizerClassCLSID });
+    }
+
+    return { changes };
+}
+
 inline std::vector<registry::ChangeSet> getAllOnByDefaultModulesChangeSets(const std::wstring installationDir)
 {
     constexpr bool PER_USER = true;
@@ -201,7 +284,9 @@ inline std::vector<registry::ChangeSet> getAllOnByDefaultModulesChangeSets(const
              getGcodePreviewHandlerChangeSet(installationDir, PER_USER),
              getSvgThumbnailHandlerChangeSet(installationDir, PER_USER),
              getGcodeThumbnailHandlerChangeSet(installationDir, PER_USER),
-             getStlThumbnailHandlerChangeSet(installationDir, PER_USER) };
+             getStlThumbnailHandlerChangeSet(installationDir, PER_USER),
+             getPowerRenameContextMenuChangeSet(installationDir, PER_USER),
+             getImageResizerContextMenuChangeSet(installationDir, PER_USER) };
 }
 
 inline std::vector<registry::ChangeSet> getAllModulesChangeSets(const std::wstring installationDir)
@@ -215,5 +300,6 @@ inline std::vector<registry::ChangeSet> getAllModulesChangeSets(const std::wstri
              getSvgThumbnailHandlerChangeSet(installationDir, PER_USER),
              getPdfThumbnailHandlerChangeSet(installationDir, PER_USER),
              getGcodeThumbnailHandlerChangeSet(installationDir, PER_USER),
-             getStlThumbnailHandlerChangeSet(installationDir, PER_USER) };
+             getPowerRenameContextMenuChangeSet(installationDir, PER_USER),
+             getImageResizerContextMenuChangeSet(installationDir, PER_USER) };
 }
